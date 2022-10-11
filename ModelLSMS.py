@@ -1,5 +1,4 @@
 from cProfile import label
-from curses import window
 from msilib import sequence
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.utils import to_categorical
@@ -31,6 +30,20 @@ for action in actions:
              res = np.load(os.path.join(DATA_PATH, action, str(sequence), "()пpу" ,format(frame_num)))
         sequences.append(window)
         labels.append(label_map[action])
+
+# np.array(sequences).shape (90,30,1662)
+
+# np.array(labels).shape  (90)
+
+X = np.array(sequences)
+X.shape
+
+y = to_categorical(labels).astype(int)
+print(y)
+
+
+
+
 
 
 

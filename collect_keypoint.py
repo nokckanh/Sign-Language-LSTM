@@ -33,9 +33,10 @@ def draw_landmarks(image, results):
 
 def draw_styles_landmarks(image , results):
     #draw face connection
-    mp_drawing.draw_landmarks(image, results.face_landmarks, mp_holistic.FACEMESH_TESSELATION,
+    """ mp_drawing.draw_landmarks(image, results.face_landmarks, mp_holistic.FACEMESH_TESSELATION,
                                 mp_drawing.DrawingSpec(color=(80,110,10),thickness = 1, circle_radius = 1),
                                 mp_drawing.DrawingSpec(color=(80,256,121),thickness = 1, circle_radius = 1) )
+   """
 
     #draw pose connection
     mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_holistic.POSE_CONNECTIONS,
@@ -60,12 +61,13 @@ def draw_styles_landmarks(image , results):
 def extract_key_point(results):
     pose = np.array([[res.x, res.y, res.z, res.visibility] for res in results.pose_landmarks.landmark]).flatten() if results.pose_landmarks else np.zeros(33*4)
 
-    face = np.array([[res.x, res.y, res.z] for res in results.face_landmarks.landmark]).flatten() if results.face_landmarks else np.zeros(468*3)
+    #face = np.array([[res.x, res.y, res.z] for res in results.face_landmarks.landmark]).flatten() if results.face_landmarks else np.zeros(468*3)
 
     lefthand = np.array([[res.x, res.y, res.z] for res in results.left_hand_landmarks.landmark]).flatten() if results.left_hand_landmarks else np.zeros(21*3)
     
     righthand = np.array([[res.x, res.y, res.z] for res in results.right_hand_landmarks.landmark]).flatten() if results.right_hand_landmarks else np.zeros(21*3)
-    return np.concatenate([pose, face, lefthand, righthand])
+    #return np.concatenate([pose, face, lefthand, righthand])
+    return np.concatenate([pose, lefthand, righthand])
 
 # lay 10 gia tri cuoi
 #extract_key_point(results)[:-10]
@@ -76,7 +78,7 @@ def extract_key_point(results):
 DATA_PATH = os.path.join('MP_DATA')
 
 # hanh dong
-actions = np.array(['hello', 'thks','iloveu'])
+actions = np.array(['hihi'])
 
 # thu thap 30 chuoi video
 no_sequences = 30

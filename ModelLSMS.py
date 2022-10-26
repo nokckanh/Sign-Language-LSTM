@@ -5,9 +5,8 @@ from keras.utils import to_categorical
 import numpy as np
 import os
 
-actions = np.array(['hello', 'thks','iloveu'])
 
-label_map = {label:num for num , label in enumerate(actions)}
+
 
 #print(label_map)
 
@@ -19,6 +18,7 @@ actions = np.array(['hello', 'thks','iloveu'])
 # thu thap 30 chuoi video
 no_sequences = 30
 
+label_map = {label:num for num , label in enumerate(actions)}
 # co the la chuyen video thanh 30 frame
 sequences_leght = 30
 

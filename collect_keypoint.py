@@ -39,9 +39,12 @@ def draw_styles_landmarks(image , results):
    """
 
     #draw pose connection
+    """
     mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_holistic.POSE_CONNECTIONS,
                                 mp_drawing.DrawingSpec(color=(80,22,10),thickness = 2, circle_radius = 4),
                                 mp_drawing.DrawingSpec(color=(80,44,121),thickness = 2, circle_radius = 2))
+    """
+    
     #draw hand connection
     mp_drawing.draw_landmarks(image, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS,
                                 mp_drawing.DrawingSpec(color=(121,22,76),thickness = 2, circle_radius = 4),
@@ -59,7 +62,7 @@ def draw_styles_landmarks(image , results):
 
 
 def extract_key_point(results):
-    pose = np.array([[res.x, res.y, res.z, res.visibility] for res in results.pose_landmarks.landmark]).flatten() if results.pose_landmarks else np.zeros(33*4)
+    #pose = np.array([[res.x, res.y, res.z, res.visibility] for res in results.pose_landmarks.landmark]).flatten() if results.pose_landmarks else np.zeros(33*4)
 
     #face = np.array([[res.x, res.y, res.z] for res in results.face_landmarks.landmark]).flatten() if results.face_landmarks else np.zeros(468*3)
 
@@ -67,7 +70,7 @@ def extract_key_point(results):
     
     righthand = np.array([[res.x, res.y, res.z] for res in results.right_hand_landmarks.landmark]).flatten() if results.right_hand_landmarks else np.zeros(21*3)
     #return np.concatenate([pose, face, lefthand, righthand])
-    return np.concatenate([pose, lefthand, righthand])
+    return np.concatenate([ lefthand, righthand])
 
 # lay 10 gia tri cuoi
 #extract_key_point(results)[:-10]
@@ -78,7 +81,7 @@ def extract_key_point(results):
 DATA_PATH = os.path.join('MP_DATA')
 
 # hanh dong
-actions = np.array(['hihi'])
+actions = np.array(['A','G'])
 
 # thu thap 30 chuoi video
 no_sequences = 30
@@ -92,7 +95,6 @@ for action in actions:
             os.makedirs(os.path.join(DATA_PATH,action, str(sequence)))
         except:
             pass
-
 
 cap = cv2.VideoCapture(0)
 with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
@@ -131,6 +133,7 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
                 
                 # NEW Export keypoints
                 keypoints = extract_key_point(results)
+                print(keypoints)
                 npy_path = os.path.join(DATA_PATH, action, str(sequence), str(frame_num))
                 np.save(npy_path, keypoints)
 

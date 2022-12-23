@@ -76,7 +76,7 @@ def extract_key_point(results):
 DATA_PATH = os.path.join('MP_DATA')
 
 # hanh dong
-actions = np.array(['hihi'])
+actions = np.array(['Hello'])
 
 # thu thap 30 chuoi video
 no_sequences = 30
@@ -104,7 +104,7 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
 
                 ret, frame = cap.read()
 
-                resized = cv2.resize(frame, (500, 600))
+                resized = cv2.resize(frame, (700, 600))
 
                 #Make detection
                 image, results = mediapipe_detection(resized, holistic)

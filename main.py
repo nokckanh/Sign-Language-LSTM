@@ -5,10 +5,9 @@ import numpy as np
 import os
 from matplotlib import pyplot as plt
 import mediapipe as mp
-import serial
 import time
 from keras.models import load_model
-
+import serial
 #--
 mp_holistic = mp.solutions.holistic
 mp_drawing = mp.solutions.drawing_utils
@@ -59,7 +58,7 @@ def extract_key_point(results):
   #  face = np.array([[res.x, res.y, res.z] for res in results.face_landmarks.landmark]).flatten() if results.face_landmarks else np.zeros(468*3)
 
     lefthand = np.array([[res.x, res.y, res.z] for res in results.left_hand_landmarks.landmark]).flatten() if results.left_hand_landmarks else np.zeros(21*3)
-    
+
     righthand = np.array([[res.x, res.y, res.z] for res in results.right_hand_landmarks.landmark]).flatten() if results.right_hand_landmarks else np.zeros(21*3)
     return np.concatenate([ lefthand, righthand])
 
@@ -181,11 +180,12 @@ def listToString(s):
 
 s = serial.Serial('com3',9600) #port is 11 (for COM12, and baud rate is 9600
   #wait for the Serial to initialize
+
 sequence = []
 sentence = []
 predictions = []
-threshold = 0.98
-model = load_model("D:\Documents\Code Python\Đồ Án Tốt Nghiệp\ModelLsmsAIMY-Dense.h5")
+threshold = 0.75
+model = load_model("D:\Documents\CodePython\Graduation\ModelLsmsMain.h5")
 actions = np.array(['A','B','BAN','BIET','BUON','C','CAM ON','CHAP NHAN','D','DEL','E','G','GAP LAI','H','HEN','HIEU',
                         'I','K','KHOE','KHONG BIET','KHONG HIEU','L','M','N','NGAC NHIEN','NONG TINH','O','P','Q','R'
                         ,'RAT VUI DUOC GAP BAN'
@@ -193,6 +193,7 @@ actions = np.array(['A','B','BAN','BIET','BUON','C','CAM ON','CHAP NHAN','D','DE
 
 cap = cv2.VideoCapture(0)
 with mp_holistic.Holistic(min_detection_confidence= 0.5, min_tracking_confidence= 0.5) as holistic:
+    lstPridict = []
     while cap.isOpened():
         ret, frame = cap.read()
 
@@ -206,22 +207,32 @@ with mp_holistic.Holistic(min_detection_confidence= 0.5, min_tracking_confidence
         keypoint = extract_key_point(results)
         sequence.append(keypoint)
         sequence = sequence[-30:]
-        cv2.waitKey(20) 
+        cv2.waitKey(20)
+
         if len(sequence) == 30:
             res = model.predict(np.expand_dims(sequence, axis=0))[0]
 
             #print(res)
             print(actions[np.argmax(res)])
+
+            s = actions[np.argmax(res)]
             predictions.append(np.argmax(res))
             #-> lay ra vi tri so nao to nhat
-
             #-- logic viz
             if np.unique(predictions[-10:])[0]==np.argmax(res): 
                 if res[np.argmax(res)] > threshold: 
                     if len(sentence) > 0: 
-                        if actions[np.argmax(res)] != sentence[-1] and actions[np.argmax(res)] != 'DEL':
-                            sentence.append(actions[np.argmax(res)])
-                        
+                        try:
+                            if(actions[np.argmax(res)]!= lstPridict[len(lstPridict)-1]):
+                                if actions[np.argmax(res)] != sentence[-1] and actions[np.argmax(res)] != 'Y':
+                                    sentence.append(actions[np.argmax(res)])
+                                if actions[np.argmax(res)] == 'Y':
+                                    sentence.pop()
+                                lstPridict.append(actions[np.argmax(res)])   
+                        except:
+                            lstPridict.append(actions[np.argmax(res)]) 
+
+                        print('hst: ',lstPridict)
                     else:
                         sentence.append(actions[np.argmax(res)])
             if len(sentence) > 5: 

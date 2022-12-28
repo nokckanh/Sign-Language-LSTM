@@ -81,7 +81,7 @@ def extract_key_point(results):
 DATA_PATH = os.path.join('MP_DATA')
 
 # hanh dong
-actions = np.array(['A','G'])
+actions = np.array(['Hanh dong'])
 
 # thu thap 30 chuoi video
 no_sequences = 30

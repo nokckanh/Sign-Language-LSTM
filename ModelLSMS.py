@@ -90,12 +90,12 @@ model.add(LSTM(64))
 #model.add(Dense(32, activation='relu')) 
 model.add(Dropout(0.2))
 model.add(Dense(actions.shape[0], activation='softmax'))
-# muc dich cua actions.shape[0] => 3 
 model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
 
 history = model.fit(X_train, y_train ,epochs=200, callbacks=[tb_callback])
 
 model.summary()
+# muc dich cua actions.shape[0] => 3 
 
 #Test
 res = model.predict(X_test)

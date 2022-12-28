@@ -111,8 +111,8 @@ res = model.predict(X_test)
 # res = [.7,0.2,0.1]  # => 0
 # actions[np.argmax(res)] # => 'hello'
 
-model.save('ModelGruMIAI-Dense.h5')
-model.load_weights('ModelGruMIAI-Dense.h5')
+model.save('ModelGruMIAI.h5')
+model.load_weights('ModelGruMIAI.h5')
 
 
 from sklearn.metrics import multilabel_confusion_matrix, accuracy_score

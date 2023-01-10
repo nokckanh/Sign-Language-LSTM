@@ -9,7 +9,6 @@ from keras.layers import LSTM,GRU, Dense,Dropout,TimeDistributed
 from keras.callbacks import TensorBoard
 from tensorflow.python.util.tf_export import keras_export
 
-
 #print(label_map)
 
 DATA_PATH = os.path.join('MP_DATA')
@@ -62,19 +61,18 @@ datagen = ImageDataGenerator(
 datagen.fit(X_train)
 """
 
-
-
 log_dir = os.path.join('Logs')
 tb_callback = TensorBoard(log_dir=log_dir)
 """
 model = Sequential()
-model.add(GRU(64, return_sequences=True, activation='relu'), input_shape=(30,126)))
-model.add(GRU(128, return_sequences=True,activation='relu')))
-model.add(GRU(64, return_sequences=False,activation='relu')))
+model.add(LSTM(64, return_sequences=True, activation='relu'), input_shape=(30,126)))
+model.add(LSTM(128, return_sequences=True,activation='relu')))
+model.add(LSTM(64, return_sequences=False,activation='relu')))
 model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu')) 
 model.add(Dense(actions.shape[0], activation='softmax'))
 """
+
 # Layer
 model = Sequential()
 model.add(LSTM(64, return_sequences=True, input_shape=(30,126)))
@@ -117,8 +115,13 @@ yhat = model.predict(X_train)
 ytrue = np.argmax(y_train, axis=1).tolist()
 yhat = np.argmax(yhat, axis=1).tolist()
 
+yhattest= model.predict(X_test  )
 
-print(accuracy_score(ytrue, yhat))
+ytruetest = np.argmax(y_test, axis=1).tolist()
+yhattest = np.argmax(yhattest, axis=1).tolist()
+
+print("ACcuracy_test: "+ accuracy_score(ytruetest, yhattest))
+print("ACcuracy_train: "+ accuracy_score(ytrue, yhat))
 
 import matplotlib.pyplot as plt
 plt.style.use("ggplot")

@@ -14,7 +14,6 @@ mp_holistic = mp.solutions.holistic
 mp_drawing = mp.solutions.drawing_utils
 
 def mediapipe_detection(image, model):
-    
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) # COLOR CONVERSION
     image.flags.writeable = False
     results = model.process(image)
@@ -81,7 +80,7 @@ def extract_key_point(results):
 DATA_PATH = os.path.join('MP_DATA')
 
 # hanh dong
-actions = np.array(['Hanh dong'])
+actions = np.array(['Hanh dong1','hanh dong 2'])
 
 # thu thap 30 chuoi video
 no_sequences = 30

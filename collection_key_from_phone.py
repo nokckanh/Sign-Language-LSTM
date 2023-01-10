@@ -76,7 +76,7 @@ def extract_key_point(results):
 DATA_PATH = os.path.join('MP_DATA')
 
 # hanh dong
-actions = np.array(['Hello'])
+actions = np.array(['datatest'])
 
 # thu thap 30 chuoi video
 no_sequences = 30
@@ -92,7 +92,7 @@ for action in actions:
             pass
 
 
-cap = cv2.VideoCapture('http://192.168.1.15:8080/video')
+cap = cv2.VideoCapture('http://192.168.1.109:8080/video')
 
 with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
     # NEW LOOP

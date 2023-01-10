@@ -29,7 +29,7 @@ sequence = []
 sentence = []
 predictions = []
 threshold = 0.95
-model = tensorflow.keras.models.load_model('D:\Documents\CodePython\Graduation\ModelLsmsMain.h5')
+model = tensorflow.keras.models.load_model('D:\Documents\CodePython\Graduation\ModelLsmsAIMY.h5')
 actions = np.array(['A','B','BAN','BIET','BUON','C','CAM ON','CHAP NHAN','D','DEL','E','G','GAP LAI','H','HEN','HIEU',
                             'I','K','KHOE','KHONG BIET','KHONG HIEU','L','M','N','NGAC NHIEN','NONG TINH','O','P','Q','R'
                             ,'RAT VUI DUOC GAP BAN'
@@ -264,7 +264,6 @@ elif app_mode =='Run on Video':
             keypoint = extract_key_point(results)
             sequence.append(keypoint)
             sequence = sequence[-30:]
-            cv2.waitKey(20)
             #---- LOGIC ----
             if len(sequence) == 30:
                 res = model.predict(np.expand_dims(sequence, axis=0))[0]
@@ -272,7 +271,7 @@ elif app_mode =='Run on Video':
                 #print(res)
                 print(actions[np.argmax(res)])
 
-                s = actions[np.argmax(res)]
+                #s = actions[np.argmax(res)]
                 predictions.append(np.argmax(res))
                 #-> lay ra vi tri so nao to nhat
                 #-- logic viz

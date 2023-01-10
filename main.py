@@ -165,8 +165,7 @@ def prob_viz(res, actions, input_frame, colors):
                 cv2.putText(output_frame, actions[num], (410, 85+12*40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2, cv2.LINE_AA)
             if num == 46 :
                 cv2.rectangle(output_frame, (410,60+13*40), (int(410+ prob*100), 90+13*40), colors[num], -1)
-                cv2.putText(output_frame, actions[num], (410, 85+13*40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2, cv2.LINE_AA)
-                      
+                cv2.putText(output_frame, actions[num], (410, 85+13*40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2, cv2.LINE_AA)       
         else:
             cv2.rectangle(output_frame, (0,60+num*40), (int(prob*100), 90+num*40), colors[num], -1)
             cv2.putText(output_frame, actions[num], (0, 85+num*40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2, cv2.LINE_AA)
@@ -178,14 +177,14 @@ def listToString(s):
     # return string 
     return (str1.join(s))
 
-s = serial.Serial('com3',9600) #port is 11 (for COM12, and baud rate is 9600
-  #wait for the Serial to initialize
+ser = serial.Serial('com3',9600) #port is 11 (for COM12, and baud rate is 9600
+#wait for the Serial to initialize
 
 sequence = []
 sentence = []
 predictions = []
-threshold = 0.75
-model = load_model("D:\Documents\CodePython\Graduation\ModelLsmsMain.h5")
+threshold = 0.95
+model = load_model("D:\Documents\CodePython\Graduation\ModelLsmsAIMY.h5")
 actions = np.array(['A','B','BAN','BIET','BUON','C','CAM ON','CHAP NHAN','D','DEL','E','G','GAP LAI','H','HEN','HIEU',
                         'I','K','KHOE','KHONG BIET','KHONG HIEU','L','M','N','NGAC NHIEN','NONG TINH','O','P','Q','R'
                         ,'RAT VUI DUOC GAP BAN'
@@ -213,12 +212,14 @@ with mp_holistic.Holistic(min_detection_confidence= 0.5, min_tracking_confidence
             res = model.predict(np.expand_dims(sequence, axis=0))[0]
 
             #print(res)
+           
             print(actions[np.argmax(res)])
 
             s = actions[np.argmax(res)]
             predictions.append(np.argmax(res))
             #-> lay ra vi tri so nao to nhat
             #-- logic viz
+           
             if np.unique(predictions[-10:])[0]==np.argmax(res): 
                 if res[np.argmax(res)] > threshold: 
                     if len(sentence) > 0: 
@@ -237,8 +238,6 @@ with mp_holistic.Holistic(min_detection_confidence= 0.5, min_tracking_confidence
                         sentence.append(actions[np.argmax(res)])
             if len(sentence) > 5: 
                 sentence = sentence[-4:]
-                s.write(listToString(sentence).encode())
-                #listToStr = ' '.join(map(str, s))
             else:
                 pass
 
@@ -251,9 +250,11 @@ with mp_holistic.Holistic(min_detection_confidence= 0.5, min_tracking_confidence
             
             cv2.rectangle(image, (0,0), (640, 40), (245, 117, 16), -1)
             cv2.putText(image, ' '.join(sentence), (3,30), 
-                       cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)    
-              
-        #
+                       cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)  
+
+            ser.write(listToString(sentence).encode())
+            #listToStr = ' '.join(map(str, s))
+        
         cv2.imshow("Feed ", image)
         
         if cv2.waitKey(10) & 0xFF == ord('q'):
